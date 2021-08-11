@@ -1,8 +1,9 @@
 package br.com.zupacademy.eduardo.proposta.novaproposta;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoSolicitacao;
+import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.StatusProposta;
+
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,10 @@ public class Proposta {
     @Positive
     private BigDecimal salario;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StatusProposta status;
+
     @Deprecated
     public Proposta() {
     }
@@ -48,9 +53,22 @@ public class Proposta {
         this.nome = nome;
         this.endereco = endereco;
         this.salario = salario;
+        this.status = StatusProposta.NAO_ELEGIVEL;
     }
 
     public UUID getId() {
         return this.id;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void atualizaStatus(ResultadoSolicitacao resultadoSolicitacao) {
+        this.status = resultadoSolicitacao.getStatusProposta();
     }
 }
