@@ -1,5 +1,6 @@
 package br.com.zupacademy.eduardo.proposta.novaproposta;
 
+import br.com.zupacademy.eduardo.proposta.associarcartao.Cartao;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoSolicitacao;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.StatusProposta;
 
@@ -41,6 +42,8 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
+    private String numeroCartao;
+
     @Deprecated
     public Proposta() {
     }
@@ -70,5 +73,9 @@ public class Proposta {
 
     public void atualizaStatus(ResultadoSolicitacao resultadoSolicitacao) {
         this.status = resultadoSolicitacao.getStatusProposta();
+    }
+
+    public void associaCartao(Cartao cartao) {
+        this.numeroCartao = cartao.getId();
     }
 }
