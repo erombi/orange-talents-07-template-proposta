@@ -71,6 +71,26 @@ public class Proposta {
         return nome;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public BigDecimal getSalario() {
+        return salario;
+    }
+
+    public StatusProposta getStatus() {
+        return status;
+    }
+
+    public String getNumeroCartao() {
+        return numeroCartao;
+    }
+
     public void atualizaStatus(ResultadoSolicitacao resultadoSolicitacao) {
         this.status = resultadoSolicitacao.getStatusProposta();
     }

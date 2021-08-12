@@ -1,5 +1,6 @@
 package br.com.zupacademy.eduardo.proposta.novaproposta;
 
+import br.com.zupacademy.eduardo.proposta.acompanhaproposta.PropostaResponse;
 import br.com.zupacademy.eduardo.proposta.compartilhado.ExecutorTransaction;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.AnaliseFinanceiraClient;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoAnalise;
@@ -11,16 +12,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/propostas")
@@ -67,6 +66,15 @@ public class PropostaController {
 
         URI uri = builder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping("/{idProposta}")
+    public ResponseEntity<PropostaResponse> acompanhamento(@PathVariable UUID idProposta) {
+        Optional<Proposta> possivelProposta = repository.findById(idProposta);
+
+        if (possivelProposta.isEmpty()) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(new PropostaResponse(possivelProposta.get()));
     }
 
 }
