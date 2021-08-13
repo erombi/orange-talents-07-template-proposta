@@ -2,18 +2,47 @@ package br.com.zupacademy.eduardo.proposta.associarcartao;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "tb_cartao_parcela")
 public class Parcela {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String uuid;
     private Integer quantidade;
     private BigDecimal valor;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Parcela(String id, Integer quantidade, BigDecimal valor) {
-        this.id = id;
-        this.quantidade = quantidade;
-        this.valor = valor;
+    @ManyToOne
+    private Cartao cartao;
+
+    @Deprecated
+    public Parcela() {
+    }
+
+    public Parcela(ParcelaResponse response) {
+        this.uuid = response.getUuid();
+        this.quantidade = response.getQuantidade();
+        this.valor = response.getValor();
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public Cartao getCartao() {
+        return cartao;
     }
 }

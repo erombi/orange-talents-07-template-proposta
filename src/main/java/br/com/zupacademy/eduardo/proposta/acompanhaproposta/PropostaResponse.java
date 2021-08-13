@@ -1,5 +1,6 @@
 package br.com.zupacademy.eduardo.proposta.acompanhaproposta;
 
+import br.com.zupacademy.eduardo.proposta.associarcartao.CartaoResponse;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.StatusProposta;
 import br.com.zupacademy.eduardo.proposta.novaproposta.Proposta;
 
@@ -15,7 +16,7 @@ public class PropostaResponse {
     private String endereco;
     private BigDecimal salario;
     private StatusProposta status;
-    private String numeroCartao;
+    private CartaoResponse cartaoResponse;
 
     public PropostaResponse(Proposta proposta) {
         this.id = proposta.getId();
@@ -25,7 +26,7 @@ public class PropostaResponse {
         this.endereco = proposta.getEndereco();
         this.salario = proposta.getSalario();
         this.status = proposta.getStatus();
-        this.numeroCartao = proposta.getNumeroCartao();
+        this.cartaoResponse = new CartaoResponse(proposta.getCartao());
     }
 
     public UUID getId() {
@@ -54,9 +55,5 @@ public class PropostaResponse {
 
     public StatusProposta getStatus() {
         return status;
-    }
-
-    public String getNumeroCartao() {
-        return numeroCartao;
     }
 }

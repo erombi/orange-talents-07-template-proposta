@@ -2,18 +2,40 @@ package br.com.zupacademy.eduardo.proposta.associarcartao;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "tb_cartao_vencimento")
 public class Vencimento {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String uuid;
     private Integer dia;
     private LocalDateTime dataDeCriacao;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Vencimento(String id, Integer dia, LocalDateTime dataDeCriacao) {
-        this.id = id;
-        this.dia = dia;
-        this.dataDeCriacao = dataDeCriacao;
+    @Deprecated
+    public Vencimento() {
+    }
+
+    public Vencimento(VencimentoResponse response) {
+        this.uuid = response.getId();
+        this.dia = response.getDia();
+        this.dataDeCriacao = response.getDataDeCriacao();
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Integer getDia() {
+        return dia;
+    }
+
+    public LocalDateTime getDataDeCriacao() {
+        return dataDeCriacao;
     }
 }

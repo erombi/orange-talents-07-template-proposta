@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AssociaCartaoClient {
 
     @GetMapping("${accounts.associaCartao}")
-    Cartao associaCartao(@RequestParam String idProposta);
+    CartaoResponse associaCartao(@RequestParam String idProposta);
 
 }

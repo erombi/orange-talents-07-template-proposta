@@ -1,6 +1,7 @@
 package br.com.zupacademy.eduardo.proposta.novaproposta;
 
 import br.com.zupacademy.eduardo.proposta.associarcartao.Cartao;
+import br.com.zupacademy.eduardo.proposta.associarcartao.CartaoResponse;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoSolicitacao;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.StatusProposta;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -42,7 +44,8 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
-    private String numeroCartao;
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Cartao cartao;
 
     @Deprecated
     public Proposta() {
@@ -87,15 +90,28 @@ public class Proposta {
         return status;
     }
 
-    public String getNumeroCartao() {
-        return numeroCartao;
+    public Cartao getCartao() {
+        return cartao;
     }
 
     public void atualizaStatus(ResultadoSolicitacao resultadoSolicitacao) {
         this.status = resultadoSolicitacao.getStatusProposta();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Proposta proposta = (Proposta) o;
+        return Objects.equals(documento, proposta.documento);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(documento);
+    }
+
     public void associaCartao(Cartao cartao) {
-        this.numeroCartao = cartao.getId();
+        this.cartao = cartao;
     }
 }

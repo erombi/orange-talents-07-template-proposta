@@ -6,28 +6,26 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "tb_cartao_renegociacao")
-public class Renegociacao {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RenegociacaoResponse {
 
     private String uuid;
     private Integer quantidade;
     private BigDecimal valor;
     private LocalDateTime dataDeCriacao;
 
-    @Deprecated
-    public Renegociacao() {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public RenegociacaoResponse(String uuid, Integer quantidade, BigDecimal valor, LocalDateTime dataDeCriacao) {
+        this.uuid = uuid;
+        this.quantidade = quantidade;
+        this.valor = valor;
+        this.dataDeCriacao = dataDeCriacao;
     }
 
-    public Renegociacao(RenegociacaoResponse response) {
-        this.uuid = response.getUuid();
-        this.quantidade = response.getQuantidade();
-        this.valor = response.getValor();
-        this.dataDeCriacao = response.getDataDeCriacao();
+    public RenegociacaoResponse(Renegociacao renegociacao) {
+        this.uuid = renegociacao.getUuid();
+        this.quantidade = renegociacao.getQuantidade();
+        this.valor = renegociacao.getValor();
+        this.dataDeCriacao = renegociacao.getDataDeCriacao();
     }
 
     public String getUuid() {
