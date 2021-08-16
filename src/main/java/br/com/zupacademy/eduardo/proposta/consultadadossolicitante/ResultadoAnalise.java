@@ -1,7 +1,5 @@
 package br.com.zupacademy.eduardo.proposta.consultadadossolicitante;
 
-import br.com.zupacademy.eduardo.proposta.novaproposta.Proposta;
-
 public class ResultadoAnalise {
 
     private String documento;
