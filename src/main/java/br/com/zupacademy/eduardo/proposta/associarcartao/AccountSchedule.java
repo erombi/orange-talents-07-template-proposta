@@ -32,7 +32,7 @@ public class AccountSchedule {
     private ExecutorTransaction executor;
 
     @Autowired
-    private AssociaCartaoClient client;
+    private ApiCartaoClient client;
 
     @Scheduled(fixedDelay = delay)
     public void associaCartao() {
@@ -48,7 +48,7 @@ public class AccountSchedule {
 
             propostas.forEach(p -> {
                 try {
-                    CartaoResponse cartaoRequest = client.associaCartao(p.getId().toString());
+                    CartaoResponse cartaoRequest = client.associaCartao(p.getId());
 
                     p.associaCartao(new Cartao(cartaoRequest));
                     manager.merge(p);

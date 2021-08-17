@@ -2,8 +2,10 @@ package br.com.zupacademy.eduardo.proposta.associarcartao;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class Cartao {
     private String titular;
 
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Bloqueio> bloqueios = new HashSet<>();
+    private Set<BloqueioCartao> bloqueioCartaos = new HashSet<>();
 
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<AvisoViagem> avisos = new HashSet<>();
@@ -54,7 +56,7 @@ public class Cartao {
         this.titular = response.getTitular();
 
         if (!response.getBloqueios().isEmpty())
-            this.bloqueios = response.getBloqueios().stream().map(Bloqueio::new).collect(Collectors.toSet());
+            this.bloqueioCartaos = response.getBloqueios().stream().map(BloqueioCartao::new).collect(Collectors.toSet());
 
         if (!response.getAvisos().isEmpty())
             this.avisos = response.getAvisos().stream().map(AvisoViagem::new).collect(Collectors.toSet());
@@ -90,8 +92,8 @@ public class Cartao {
         return titular;
     }
 
-    public Set<Bloqueio> getBloqueios() {
-        return bloqueios;
+    public Set<BloqueioCartao> getBloqueios() {
+        return bloqueioCartaos;
     }
 
     public Set<AvisoViagem> getAvisos() {
@@ -116,5 +118,23 @@ public class Cartao {
 
     public Vencimento getVencimento() {
         return vencimento;
+    }
+
+    public void atualizaBloqueio(@NotNull CartaoResponse response) {
+        if (response.getBloqueios() != null)
+            this.bloqueioCartaos = response.getBloqueios().stream().map(BloqueioCartao::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cartao cartao = (Cartao) o;
+        return Objects.equals(numeroCartao, cartao.numeroCartao);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numeroCartao);
     }
 }

@@ -1,70 +1,62 @@
 package br.com.zupacademy.eduardo.proposta.associarcartao;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-@Entity
-@Table(name = "tb_cartao_bloqueio")
 public class Bloqueio {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @JsonProperty
+    private String id;
 
-    @NotBlank
-    private String uuid;
+    @JsonProperty
     private LocalDateTime bloqueadoEm;
+
+    @JsonProperty
     private String sistemaResponsavel;
+
+    @JsonProperty
     private boolean ativo;
 
-    @ManyToOne
-    private Cartao cartao;
-
-    @Deprecated
     public Bloqueio() {
     }
 
-    public Bloqueio(BloqueioResponse response) {
-        this.uuid = response.getId();
-        this.bloqueadoEm = response.getBloqueadoEm();
-        this.sistemaResponsavel = response.getSistemaResponsavel();
-        this.ativo = response.isAtivo();
+    public Bloqueio(BloqueioCartao bloqueioCartao) {
+        this.id = bloqueioCartao.getUuid();
+        this.bloqueadoEm = bloqueioCartao.getBloqueadoEm();
+        this.sistemaResponsavel = bloqueioCartao.getSistemaResponsavel();
+        this.ativo = bloqueioCartao.isAtivo();
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public LocalDateTime getBloqueadoEm() {
         return bloqueadoEm;
     }
 
+    public void setBloqueadoEm(LocalDateTime bloqueadoEm) {
+        this.bloqueadoEm = bloqueadoEm;
+    }
+
     public String getSistemaResponsavel() {
         return sistemaResponsavel;
+    }
+
+    public void setSistemaResponsavel(String sistemaResponsavel) {
+        this.sistemaResponsavel = sistemaResponsavel;
     }
 
     public boolean isAtivo() {
         return ativo;
     }
 
-    public Cartao getCartao() {
-        return cartao;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bloqueio bloqueio = (Bloqueio) o;
-        return Objects.equals(id, bloqueio.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
