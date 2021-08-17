@@ -1,5 +1,7 @@
 package br.com.zupacademy.eduardo.proposta.associarcartao;
 
+import br.com.zupacademy.eduardo.proposta.novaproposta.Proposta;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -46,6 +49,12 @@ public class Cartao {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Vencimento vencimento;
 
+    @OneToOne(mappedBy = "cartao")
+    private Proposta proposta;
+
+    @Enumerated(EnumType.STRING)
+    private StatusCartao statusCartao;
+
     @Deprecated
     public Cartao() {
     }
@@ -55,8 +64,12 @@ public class Cartao {
         this.emitidoEm = response.getEmitidoEm();
         this.titular = response.getTitular();
 
-        if (!response.getBloqueios().isEmpty())
+        if (!response.getBloqueios().stream().filter(Bloqueio::isAtivo).collect(Collectors.toSet()).isEmpty()) {
             this.bloqueioCartaos = response.getBloqueios().stream().map(BloqueioCartao::new).collect(Collectors.toSet());
+            this.statusCartao = StatusCartao.BLOQUEADO;
+        }
+        else
+            this.statusCartao = StatusCartao.EM_USO;
 
         if (!response.getAvisos().isEmpty())
             this.avisos = response.getAvisos().stream().map(AvisoViagem::new).collect(Collectors.toSet());
@@ -74,6 +87,7 @@ public class Cartao {
 
         if (response.getVencimento() != null)
             this.vencimento = new Vencimento(response.getVencimento());
+
     }
 
     public Long getId() {
@@ -120,9 +134,15 @@ public class Cartao {
         return vencimento;
     }
 
-    public void atualizaBloqueio(@NotNull CartaoResponse response) {
-        if (response.getBloqueios() != null)
-            this.bloqueioCartaos = response.getBloqueios().stream().map(BloqueioCartao::new).collect(Collectors.toSet());
+    public UUID getProposta() {
+        return proposta.getId();
+    }
+
+    public void atualizaBloqueio(OrdemDeBloqueioResponse response, String userAgent, String ip) {
+        if (response.getResultado().equals(ResultadoBloqueio.BLOQUEADO)) {
+            this.statusCartao = StatusCartao.BLOQUEADO;
+            this.bloqueioCartaos.add(new BloqueioCartao(this, userAgent, ip));
+        }
     }
 
     @Override

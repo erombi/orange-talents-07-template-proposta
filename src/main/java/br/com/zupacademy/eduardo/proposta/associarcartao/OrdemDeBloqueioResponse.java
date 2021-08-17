@@ -10,4 +10,8 @@ public class OrdemDeBloqueioResponse {
     public OrdemDeBloqueioResponse(ResultadoBloqueio resultado) {
         this.resultado = resultado;
     }
+
+    public ResultadoBloqueio getResultado() {
+        return resultado;
+    }
 }

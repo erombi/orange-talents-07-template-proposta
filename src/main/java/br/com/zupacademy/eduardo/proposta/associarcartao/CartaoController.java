@@ -4,9 +4,9 @@ import br.com.zupacademy.eduardo.proposta.compartilhado.ExecutorTransaction;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
@@ -60,26 +60,23 @@ public class CartaoController {
             ipAddress = request.getRemoteAddr();
         }
 
-        Map<String, String> map = getMap();
         try {
-            OrdemDeBloqueioResponse ordemDeBloqueioResponse = client.bloqueiaCartao(cartao.getNumeroCartao(), map);
+            OrdemDeBloqueioResponse ordemDeBloqueioResponse = client.bloqueiaCartao(cartao.getNumeroCartao(), getBody());
+            cartao.atualizaBloqueio(ordemDeBloqueioResponse, userAgent, ipAddress);
 
-            CartaoResponse cartaoResponse = client.pesquisaCartao(cartao.getNumeroCartao());
-
-            cartao.atualizaBloqueio(cartaoResponse);
             executor.inTransaction(() -> {
                 manager.merge(cartao);
             });
 
-
+            return ResponseEntity.ok().build();
         } catch (FeignException e) {
-            e.printStackTrace();
-        }
+            if (e.status() == HttpStatus.UNPROCESSABLE_ENTITY.value()) return ResponseEntity.unprocessableEntity().build();
 
-        return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    private Map<String, String> getMap() {
+    private Map<String, String> getBody() {
         Map<String, String> map = new HashMap<>();
         map.put("sistemaResponsavel", appName);
         return map;

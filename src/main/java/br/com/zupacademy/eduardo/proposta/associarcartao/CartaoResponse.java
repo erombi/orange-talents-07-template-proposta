@@ -1,5 +1,6 @@
 package br.com.zupacademy.eduardo.proposta.associarcartao;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@JsonAutoDetect
 public class CartaoResponse {
 
     @JsonProperty
@@ -19,7 +21,7 @@ public class CartaoResponse {
     @JsonProperty
     private String titular;
     @JsonProperty
-    private List<Bloqueio> bloqueios = new ArrayList<>();
+    private List<Bloqueio> bloqueios;
     @JsonProperty
     private Set<AvisoViagemResponse> avisos = new HashSet<>();
     @JsonProperty
@@ -52,20 +54,20 @@ public class CartaoResponse {
         this.idProposta = idProposta;
     }
 
-    public CartaoResponse(Cartao cartao) {
-        this.id = cartao.getNumeroCartao();
-        this.emitidoEm = cartao.getEmitidoEm();
-        this.titular = cartao.getTitular();
-        this.bloqueios = cartao.getBloqueios().stream().map(Bloqueio::new).collect(Collectors.toList());
-        this.avisos = cartao.getAvisos().stream().map(AvisoViagemResponse::new).collect(Collectors.toSet());
-        this.carteiras = cartao.getCarteiras().stream().map(CarteiraDigitalResponse::new).collect(Collectors.toSet());
-        this.parcelas = cartao.getParcelas().stream().map(ParcelaResponse::new).collect(Collectors.toSet());
-        this.limite = cartao.getLimite();
-        if (cartao.getRenegociacao() != null)
-            this.renegociacao = new RenegociacaoResponse(cartao.getRenegociacao());
-        if (cartao.getVencimento() != null)
-            this.vencimento = new VencimentoResponse(cartao.getVencimento());
-    }
+//    public CartaoResponse(Cartao cartao) {
+//        this.id = cartao.getNumeroCartao();
+//        this.emitidoEm = cartao.getEmitidoEm();
+//        this.titular = cartao.getTitular();
+//        this.bloqueios = cartao.getBloqueios().stream().map(Bloqueio::new).collect(Collectors.toList());
+//        this.avisos = cartao.getAvisos().stream().map(AvisoViagemResponse::new).collect(Collectors.toSet());
+//        this.carteiras = cartao.getCarteiras().stream().map(CarteiraDigitalResponse::new).collect(Collectors.toSet());
+//        this.parcelas = cartao.getParcelas().stream().map(ParcelaResponse::new).collect(Collectors.toSet());
+//        this.limite = cartao.getLimite();
+//        if (cartao.getRenegociacao() != null)
+//            this.renegociacao = new RenegociacaoResponse(cartao.getRenegociacao());
+//        if (cartao.getVencimento() != null)
+//            this.vencimento = new VencimentoResponse(cartao.getVencimento());
+//    }
 
     public String getId() {
         return id;
