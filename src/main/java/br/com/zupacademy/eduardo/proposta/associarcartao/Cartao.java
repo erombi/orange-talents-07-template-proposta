@@ -72,7 +72,7 @@ public class Cartao {
             this.statusCartao = StatusCartao.EM_USO;
 
         if (!response.getAvisos().isEmpty())
-            this.avisos = response.getAvisos().stream().map(AvisoViagem::new).collect(Collectors.toSet());
+            this.avisos = response.getAvisos().stream().map(a -> new AvisoViagem(a, this)).collect(Collectors.toSet());
 
         if (!response.getCarteiras().isEmpty())
             this.carteiras = response.getCarteiras().stream().map(CarteiraDigital::new).collect(Collectors.toSet());

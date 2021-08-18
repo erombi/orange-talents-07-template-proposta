@@ -79,18 +79,28 @@ public class CartaoController {
         Cartao cartao = manager.find(Cartao.class, idCartao);
         if (cartao == null) return ResponseEntity.notFound().build();
 
-        Map<String, String> header = getHeader(request);
+        try {
+            RespostaAvisoViagem avisoViagemResponse = client.cadastraAviso(cartao.getNumeroCartao(), avisoViagemRequestrequest);
+            Map<String, String> header = getHeader(request);
 
-        AvisoViagem avisoViagem = new AvisoViagem(avisoViagemRequestrequest, cartao);
-        boolean adicionado = cartao.adicionaAviso(avisoViagem);
+            if (avisoViagemResponse.getResultado().equals(ResultadoAviso.FALHA)) return ResponseEntity.unprocessableEntity().build();
 
-        if (!adicionado) return ResponseEntity.unprocessableEntity().build();
+            AvisoViagem avisoViagem = new AvisoViagem(avisoViagemRequestrequest, cartao, header.get("userAgent"), header.get("ip"));
+            boolean adicionado = cartao.adicionaAviso(avisoViagem);
 
-        executor.inTransaction(() -> {
-            manager.merge(cartao);
-        });
+            if (!adicionado) return ResponseEntity.unprocessableEntity().build();
 
-        return ResponseEntity.ok().build();
+            executor.inTransaction(() -> {
+                manager.merge(cartao);
+            });
+
+            return ResponseEntity.ok().build();
+
+        } catch (FeignException e) {
+            if (e.status() == HttpStatus.UNPROCESSABLE_ENTITY.value()) return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     private Map<String, String> getBody() {

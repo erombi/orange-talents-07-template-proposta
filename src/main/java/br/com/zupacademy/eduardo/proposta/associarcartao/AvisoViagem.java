@@ -3,6 +3,7 @@ package br.com.zupacademy.eduardo.proposta.associarcartao;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -17,6 +18,11 @@ public class AvisoViagem {
     private LocalDate validoAte;
     private String destino;
 
+    private String userAgent;
+    private String ipOrigem;
+
+    private Instant criadoEm = Instant.now();
+
     @ManyToOne
     private Cartao cartao;
 
@@ -24,15 +30,19 @@ public class AvisoViagem {
     public AvisoViagem() {
     }
 
-    public AvisoViagem(AvisoViagemResponse response) {
+    public AvisoViagem(AvisoViagemResponse response, Cartao cartao) {
         this.validoAte = response.getValidoAte();
         this.destino = response.getDestino();
+        this.userAgent = userAgent;
+        this.ipOrigem = ipOrigem;
     }
 
-    public AvisoViagem(AvisoViagemRequest request, Cartao cartao) {
-        this.validoAte = request.getDataTermino();
+    public AvisoViagem(AvisoViagemRequest request, Cartao cartao, String userAgent, String ipOrigem) {
+        this.validoAte = request.getValidoAte();
         this.destino = request.getDestino();
         this.cartao = cartao;
+        this.userAgent = userAgent;
+        this.ipOrigem = ipOrigem;
     }
 
     public Long getId() {

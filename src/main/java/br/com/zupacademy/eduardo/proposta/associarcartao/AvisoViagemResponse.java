@@ -11,22 +11,19 @@ public class AvisoViagemResponse {
     private LocalDate validoAte;
     private String destino;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public AvisoViagemResponse(LocalDate validoAte, String destino) {
-        this.validoAte = validoAte;
-        this.destino = destino;
-    }
-
-    public AvisoViagemResponse(AvisoViagem avisoViagem) {
-        this.validoAte = avisoViagem.getValidoAte();
-        this.destino = avisoViagem.getDestino();
-    }
-
     public LocalDate getValidoAte() {
         return validoAte;
     }
 
     public String getDestino() {
         return destino;
+    }
+
+    public void setValidoAte(LocalDate validoAte) {
+        this.validoAte = validoAte;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
     }
 }

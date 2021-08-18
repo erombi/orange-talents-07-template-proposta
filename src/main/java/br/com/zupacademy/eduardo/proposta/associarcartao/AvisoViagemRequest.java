@@ -12,21 +12,21 @@ public class AvisoViagemRequest {
 
     @NotNull
     @Future
-    private LocalDate dataTermino;
+    private LocalDate validoAte;
 
     public String getDestino() {
         return destino;
     }
 
-    public LocalDate getDataTermino() {
-        return dataTermino;
+    public LocalDate getValidoAte() {
+        return validoAte;
     }
 
     public void setDestino(String destino) {
         this.destino = destino;
     }
 
-    public void setDataTermino(LocalDate dataTermino) {
-        this.dataTermino = dataTermino;
+    public void setValidoAte(LocalDate validoAte) {
+        this.validoAte = validoAte;
     }
 }
