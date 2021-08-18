@@ -2,7 +2,7 @@ package br.com.zupacademy.eduardo.proposta.associarcartao;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class EncodedFinger {
+public class    EncodedFinger {
 
     private String fingerprint;
 

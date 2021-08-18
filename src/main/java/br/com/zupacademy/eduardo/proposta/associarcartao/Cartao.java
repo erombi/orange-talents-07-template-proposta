@@ -157,4 +157,8 @@ public class Cartao {
     public int hashCode() {
         return Objects.hash(numeroCartao);
     }
+
+    public boolean adicionaAviso(AvisoViagem avisoViagem) {
+        return this.avisos.add(avisoViagem);
+    }
 }

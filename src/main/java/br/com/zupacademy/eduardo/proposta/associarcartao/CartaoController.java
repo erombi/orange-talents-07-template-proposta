@@ -54,15 +54,12 @@ public class CartaoController {
         Cartao cartao = manager.find(Cartao.class, idCartao);
         if (cartao == null) return ResponseEntity.notFound().build();
 
-        String userAgent = request.getHeader("User-Agent");
-        String ipAddress = request.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null) {
-            ipAddress = request.getRemoteAddr();
-        }
+        Map<String, String> header = getHeader(request);
+
 
         try {
             OrdemDeBloqueioResponse ordemDeBloqueioResponse = client.bloqueiaCartao(cartao.getNumeroCartao(), getBody());
-            cartao.atualizaBloqueio(ordemDeBloqueioResponse, userAgent, ipAddress);
+            cartao.atualizaBloqueio(ordemDeBloqueioResponse, header.get("userAgent"), header.get("ip"));
 
             executor.inTransaction(() -> {
                 manager.merge(cartao);
@@ -76,10 +73,41 @@ public class CartaoController {
         }
     }
 
+    @PostMapping("/{idCartao}/avisos")
+    public ResponseEntity<?> cadastroAviso(@PathVariable Long idCartao, HttpServletRequest request,
+                                            @RequestBody @Valid AvisoViagemRequest avisoViagemRequestrequest) {
+        Cartao cartao = manager.find(Cartao.class, idCartao);
+        if (cartao == null) return ResponseEntity.notFound().build();
+
+        Map<String, String> header = getHeader(request);
+
+        AvisoViagem avisoViagem = new AvisoViagem(avisoViagemRequestrequest, cartao);
+        boolean adicionado = cartao.adicionaAviso(avisoViagem);
+
+        if (!adicionado) return ResponseEntity.unprocessableEntity().build();
+
+        executor.inTransaction(() -> {
+            manager.merge(cartao);
+        });
+
+        return ResponseEntity.ok().build();
+    }
+
     private Map<String, String> getBody() {
         Map<String, String> map = new HashMap<>();
         map.put("sistemaResponsavel", appName);
         return map;
+    }
+
+    public Map<String, String> getHeader(HttpServletRequest request) {
+        HashMap<String, String> header = new HashMap<>();
+
+        header.put("userAgent",request.getHeader("User-Agent"));
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) ipAddress = request.getRemoteAddr();
+        header.put("ip", ipAddress);
+
+        return header;
     }
 
 

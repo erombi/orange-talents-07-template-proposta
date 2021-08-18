@@ -29,6 +29,12 @@ public class AvisoViagem {
         this.destino = response.getDestino();
     }
 
+    public AvisoViagem(AvisoViagemRequest request, Cartao cartao) {
+        this.validoAte = request.getDataTermino();
+        this.destino = request.getDestino();
+        this.cartao = cartao;
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,13 +56,11 @@ public class AvisoViagem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AvisoViagem that = (AvisoViagem) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(validoAte, that.validoAte) && Objects.equals(destino, that.destino) && Objects.equals(cartao, that.cartao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(validoAte, destino, cartao);
     }
-
-
 }
