@@ -7,10 +7,12 @@ import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoAnal
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.ResultadoSolicitacao;
 import br.com.zupacademy.eduardo.proposta.consultadadossolicitante.SolicitacaoAnalise;
 import feign.FeignException;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,6 +28,9 @@ public class PropostaController {
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
     @Autowired
+    private Tracer tracer;
+
+    @Autowired
     private PropostaRepository repository;
 
     @Autowired
@@ -36,8 +41,11 @@ public class PropostaController {
 
     @PostMapping
     public ResponseEntity<?> insert(@RequestBody @Valid PropostaRequest request, UriComponentsBuilder builder) {
+        tracer.activeSpan().setTag("user.email", "eduardo@zup.com");
+
         Optional<Proposta> exists = repository.findByDocumento(request.getDocumento());
         if (exists.isPresent()) return ResponseEntity.unprocessableEntity().build();
+
         Proposta proposta = request.toModel();
 
         executor.inTransaction(() -> {
