@@ -161,4 +161,8 @@ public class Cartao {
     public boolean adicionaAviso(AvisoViagem avisoViagem) {
         return this.avisos.add(avisoViagem);
     }
+
+    public boolean associaCarteira(CarteiraDigital carteiraDigital) {
+        return this.carteiras.add(carteiraDigital);
+    }
 }

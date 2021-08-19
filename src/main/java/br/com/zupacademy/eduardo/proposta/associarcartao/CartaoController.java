@@ -103,6 +103,36 @@ public class CartaoController {
         }
     }
 
+    @PostMapping("/{idCartao}/carteiras")
+    public ResponseEntity<?> criaCarteira(@PathVariable Long idCartao, @RequestBody @Valid SolicitacaoCarteiraRequest request,
+                                            UriComponentsBuilder builder) {
+        Cartao cartao = manager.find(Cartao.class, idCartao);
+        if (cartao == null) return ResponseEntity.notFound().build();
+
+        try {
+            RespostaCarteiraDigital respostaCarteiraDigital = client.cadastraCarteira(cartao.getNumeroCartao(), request);
+
+            if (respostaCarteiraDigital.getResultado().equals(ResultadoCarteira.FALHA)) return ResponseEntity.unprocessableEntity().build();
+
+            CarteiraDigital carteiraDigital = respostaCarteiraDigital.toModel(cartao, request);
+            boolean associado = cartao.associaCarteira(carteiraDigital);
+
+            if (!associado) return ResponseEntity.unprocessableEntity().build();
+
+            executor.inTransaction(() -> {
+                manager.merge(cartao);
+            });
+
+            URI uri = builder.path("/cartoes/{idCartao}/carteiras/{idCarteira}").buildAndExpand(cartao.getId(), carteiraDigital.getId()).toUri();
+            return ResponseEntity.created(uri).build();
+
+        } catch (FeignException e) {
+            if (e.status() == HttpStatus.UNPROCESSABLE_ENTITY.value()) return ResponseEntity.unprocessableEntity().build();
+
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private Map<String, String> getBody() {
         Map<String, String> map = new HashMap<>();
         map.put("sistemaResponsavel", appName);

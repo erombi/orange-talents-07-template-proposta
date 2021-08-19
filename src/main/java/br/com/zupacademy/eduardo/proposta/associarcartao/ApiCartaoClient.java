@@ -21,4 +21,7 @@ public interface ApiCartaoClient {
 
     @PostMapping("${accounts.avisoViagem}")
     RespostaAvisoViagem cadastraAviso(@PathVariable String id, @RequestBody @Valid AvisoViagemRequest request);
+
+    @PostMapping("${accounts.criaCarteira}")
+    RespostaCarteiraDigital cadastraCarteira(@PathVariable String id, @RequestBody @Valid SolicitacaoCarteiraRequest request);
 }
