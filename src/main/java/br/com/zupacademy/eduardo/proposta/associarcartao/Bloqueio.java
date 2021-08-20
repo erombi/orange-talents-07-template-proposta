@@ -18,15 +18,15 @@ public class Bloqueio {
     @JsonProperty
     private boolean ativo;
 
-//    public Bloqueio() {
-//    }
-//
-//    public Bloqueio(BloqueioCartao bloqueioCartao) {
-//        this.id = bloqueioCartao.getUuid();
-//        this.bloqueadoEm = bloqueioCartao.getBloqueadoEm();
-//        this.sistemaResponsavel = bloqueioCartao.getSistemaResponsavel();
-//        this.ativo = bloqueioCartao.isAtivo();
-//    }
+    public Bloqueio() {
+    }
+
+    public Bloqueio(BloqueioCartao bloqueioCartao) {
+        this.id = bloqueioCartao.getUuid();
+        this.bloqueadoEm = bloqueioCartao.getBloqueadoEm();
+        this.sistemaResponsavel = bloqueioCartao.getSistemaResponsavel();
+        this.ativo = bloqueioCartao.isAtivo();
+    }
 
     public String getId() {
         return id;

@@ -26,8 +26,8 @@ public class PropostaResponse {
         this.endereco = proposta.getEndereco();
         this.salario = proposta.getSalario();
         this.status = proposta.getStatus();
-//        if (proposta.getCartao() != null)
-//            this.cartaoResponse = new CartaoResponse(proposta.getCartao());
+        if (proposta.getCartao() != null)
+            this.cartaoResponse = new CartaoResponse(proposta.getCartao());
     }
 
     public UUID getId() {

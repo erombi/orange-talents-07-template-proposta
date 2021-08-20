@@ -24,6 +24,7 @@ public class Proposta {
 
     @NotBlank
     @Documento
+    @Convert(converter = DocumentoConverter.class)
     private String documento;
 
     @NotBlank
